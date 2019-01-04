@@ -15,7 +15,7 @@
  */
 
  html, body {
-  font-family: 'Roboto', 'Helvetica', sans-serif;
+  font-family: 'Comfortaa', 'Helvetica', sans-serif;
 }
 main, #messages-card {
   height: 100%;
@@ -67,8 +67,9 @@ main, #messages-card {
 .message-container {
   display: block;
   margin-top: 10px;
-  border-top: 1px solid #f3f3f3;
-  padding-top: 10px;
+  border-top: 1px solid #ffffff;
+  background: rgb(233, 240, 245);
+  padding: 5px;
   opacity: 0;
   transition: opacity 1s ease-in-out;
 }
@@ -82,6 +83,7 @@ main, #messages-card {
   height: 30px;
   background-size: 30px;
   border-radius: 20px;
+  shape-margin: 3px;
 }
 .message-container .spacing {
   display: table-cell;
@@ -90,15 +92,16 @@ main, #messages-card {
 .message-container .message {
   display: table-cell;
   width: calc(100% - 40px);
-  padding: 5px 0 5px 10px;
+  padding: 5px 0 5px 0;
 }
 .message-container .name {
-  display: inline-block;
+  /* display: inline-block; */
+  display:block ;
   width: 100%;
-  padding-left: 40px;
-  color: #bbb;
+  /* padding-left: 40px; */
+  color: rgb(26, 71, 82);
   font-style: italic;
-  font-size: 12px;
+  font-size: 10px;
   box-sizing: border-box;
 }
 #message-form {

@@ -18,41 +18,65 @@
 // Signs-in Friendly Chat.
 function signIn() {
   // TODO 1: Sign in Firebase with credential from the Google user.
+  var provider = new firebase.auth.GoogleAuthProvider();
+  firebase.auth().signInWithPopup(provider);
 }
 
 // Signs-out of Friendly Chat.
 function signOut() {
   // TODO 2: Sign out of Firebase.
+  firebase.auth().signOut();
 }
 
 // Initiate firebase auth.
 function initFirebaseAuth() {
   // TODO 3: Initialize Firebase.
+  firebase.auth().onAuthStateChanged(authStateObserver);
 }
 
 // Returns the signed-in user's profile Pic URL.
 function getProfilePicUrl() {
   // TODO 4: Return the user's profile pic URL.
+  return firebase.auth().currentUser.photoURL || '/images/profile_placeholder.png';
 }
 
 // Returns the signed-in user's display name.
 function getUserName() {
   // TODO 5: Return the user's display name.
+  return firebase.auth().currentUser.displayName;
 }
 
 // Returns true if a user is signed-in.
 function isUserSignedIn() {
   // TODO 6: Return true if a user is signed-in.
+  return !!firebase.auth().currentUser;
 }
 
 // Loads chat messages history and listens for upcoming ones.
 function loadMessages() {
   // TODO 7: Load and listens for new messages.
+  var callback = function(snap){
+    var data = snap.val();
+    displayMessage(snap.key, data.name, data.text, data.photoUrl, data.imageUrl);
+  };
+  // firebase.database().ref('/messages').limitToLast(20).on('child_added', callback);
+  // firebase.database().ref('/messages').limitToLast(20).on('child_changed', callback);
+  firebase.database().ref('/messages').on('child_added', callback);
+  firebase.database().ref('/messages').on('child_changed', callback);
+
 }
 
 // Saves a new message on the Firebase DB.
 function saveMessage(messageText) {
   // TODO 8: Push a new message to Firebase.
+  return firebase.database().ref('/messages').push({
+    name: getUserName(),
+    text: messageText,
+    photoUrl: getProfilePicUrl()
+  }).catch(function(error){
+    console.error('Error writing new message to Realtime Database:', error);
+  })
+
 }
 
 // Saves a new message containing an image in Firebase.
@@ -162,12 +186,19 @@ function resetMaterialTextfield(element) {
 }
 
 // Template for messages.
+// var MESSAGE_TEMPLATE =
+//     '<div class="message-container">' +
+//       '<div class="spacing"><div class="pic"></div></div>' +
+//       '<div class="message"></div>' +
+//       '<div class="name"></div>' +
+//     '</div>';
+
 var MESSAGE_TEMPLATE =
-    '<div class="message-container">' +
-      '<div class="spacing"><div class="pic"></div></div>' +
-      '<div class="message"></div>' +
-      '<div class="name"></div>' +
-    '</div>';
+  '<div class="message-container">' +
+  '<table><tr><td><div class="spacing"><div class="pic"></div></div></td>' +
+  '<td><div class="message"></div>' +
+  '<div class="name"></div></td>' +
+  '</div></tr></table>';
 
 // Adds a size to Google Profile pics URLs.
 function addSizeToGoogleProfilePic(url) {
